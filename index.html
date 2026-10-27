@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feliz Cumpleaños!!!!</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Fuente amigable y bonita -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<style>
+ 
+/* La tarjeta principal conserva su posición y diseño */
+#section1 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  overflow: hidden;
+  min-height: 480px;
+}
+
+/* Título */
+#section1 .special-text {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  color: #d63384;
+  font-weight: 600;
+  font-size: 18px;
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* Marco interior: 3 arriba, 2 a los lados, 2 abajo */
+.bts-frame {
+  width: 100%;
+  max-width: 680px;
+  flex: 1;
+  min-height: 350px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: 90px minmax(180px, 1fr) 90px;
+  grid-template-areas:
+    ". top1 top2 top3 ."
+    "left center center center right"
+    ". bottom1 . bottom2 .";
+  align-items: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 10px 4px;
+  box-sizing: border-box;
+}
+
+/* Posición de las siete fotografías */
+.member-1 { grid-area: top1; }
+.member-2 { grid-area: top2; }
+.member-3 { grid-area: top3; }
+.member-4 { grid-area: left; }
+.member-5 { grid-area: right; }
+.member-6 { grid-area: bottom1; }
+.member-7 { grid-area: bottom2; }
+
+/* Estilo de cada fotografía */
+.bts-member {
+  display: block;
+  max-width: 105px;
+  height: 111px;
+  object-fit: cover;
+  object-position: center;
+  border: 3px solid #ff8db8;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(214, 51, 132, 0.2);
+  opacity: 0;
+  transform: scale(0.65);
+  animation: btsAppear 0.65s ease-out forwards;
+}
+
+/* Aparición secuencial */
+.member-1 { animation-delay: 0.2s; }
+.member-2 { animation-delay: 0.8s; }
+.member-3 { animation-delay: 1.4s; }
+.member-4 { animation-delay: 2s; }
+.member-5 { animation-delay: 2.6s; }
+.member-6 { animation-delay: 3.2s; }
+.member-7 { animation-delay: 3.8s; }
+
+@keyframes btsAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.65) translateY(12px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.08) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Área central de las partículas */
+.particles-area {
+  grid-area: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 480px;
+  align-self: stretch;
+}
+
+/* El canvas queda limitado al centro */
+#canvas-cumple {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Botón original */
+#section1 .btn-section1 {
+  position: relative;
+  z-index: 5;
+  margin: 12px 0 10px;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 480px) {
+  #section1 {
+    min-height: 430px;
+    padding: 12px 8px;
+  }
+
+  #section1 .special-text {
+    font-size: 15px;
+  }
+
+  .bts-frame {
+    min-height: 300px;
+    grid-template-rows: 70px minmax(150px, 1fr) 70px;
+    gap: 4px;
+    padding: 6px 0;
+  }
+
+  .bts-member {
+    height: 60px;
+    border-width: 2px;
+    border-radius: 8px;
+  }
+
+  .particles-area {
+    min-height: 150px;
+  }
+}
+
+/* Respeta la preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .bts-member {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+</style>
+<body>
+
+  <div class="container">
+
+    <!-- PANTALLA 1: Bienvenida -->
+    <div id="screen1" class="card">
+      <div class="character">
+        <img src="img/feliz.gif" alt="feliz">
+      </div>
+      <h1>FELIZ CUMPLEAÑOS!!!! 🎉</h1>
+      <p class="subtitle">Hice este espacio especial para celebrar tu día. Toca una opción para empezar</p>
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="rejected()">NO GRACIAS</button>
+        <button class="btn btn-primary" onclick="goToMenu()">SÍ PORFAVOR</button>
+      </div>
+    </div>
+
+    <!-- PANTALLA 2: Persuasión cuando presiona NO -->
+    <div id="screen2" class="card hidden">
+      <div class="character">
+        <img src="img/triste.gif" alt="triste">
+      </div>
+      <h1>POR FAVOR, ¡TE GUSTARÁ!</h1>
+      <p>Di que sí...</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="goToMenu()">SÍ</button>
+      </div>
+    </div>
+
+    <!-- PANTALLA 3: Menú principal (Los 4 botones) -->
+    <div id="screen3" class="card hidden">
+      <h1>¡¡¡SORPRESAAA!!!</h1>
+      <div class="character">
+        <img src="img/descarga.gif" alt="triste">
+      </div>
+      <p>HAZ CLICK EN CADA UNO</p>
+      <div class="grid-menu">
+        <button class="menu-btn" onclick="openSection('section1')">
+          <img src="img/cara.png" alt="cara" style="width: 50%;">
+        </button>
+        <button class="menu-btn" onclick="openSection('section2')">
+          <img src="img/cara.png" alt="cara" style="width: 50%;">
+        </button>
+        <button class="menu-btn" onclick="openSection('section3')">
+          <img src="img/cara.png" alt="cara" style="width: 50%;">
+        </button>
+        <button class="menu-btn" onclick="openSection('section4')">
+          <img src="img/cara.png" alt="cara" style="width: 50%;">
+        </button>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="backToPrincipal()">⬅ Volver</button>
+      </div>
+              
+    </div>
+
+    <!-- SECCIÓN 1: Mensajes de Amor -->
+  <!-- SECCIÓN 1: Flores / Regalo Animado -->
+
+<!-- SECCIÓN 1: BTS y regalo de partículas -->
+<div id="section1" class="card hidden">
+
+  <div class="special-text">
+    ¡Un regalo especial para festejar a alguien increíble! 🎁✨
+  </div>
+
+  <div class="bts-frame">
+
+    <!-- Fila superior: tres integrantes -->
+    <img class="bts-member member-1"
+         src="img/1.png" alt="Integrante de BTS 1">
+
+    <img class="bts-member member-2"
+         src="img/3.png" alt="Integrante de BTS 2">
+
+    <img class="bts-member member-3"
+         src="img/2.png" alt="Integrante de BTS 3">
+
+    <!-- Lado izquierdo -->
+    <img class="bts-member member-4"
+         src="img/4.png" alt="Integrante de BTS 4">
+
+    <!-- Centro: animación original de partículas -->
+    <div class="particles-area">
+      <canvas id="canvas-cumple"></canvas>
+      <img id="img-regalo"
+           src="img/Regalo.png"
+           alt=""
+           style="display:none;">
+    </div>
+
+    <!-- Lado derecho -->
+    <img class="bts-member member-5"
+         src="img/5.png" alt="Integrante de BTS 5">
+
+    <!-- Fila inferior: dos integrantes -->
+    <img class="bts-member member-6"
+         src="img/6.png" alt="Integrante de BTS 6">
+
+    <img class="bts-member member-7"
+         src="img/7.png" alt="Integrante de BTS 7">
+
+  </div>
+
+  <button class="btn btn-back btn-section1"
+          onclick="backToMenu()">
+    ⬅ Volver al inicio
+  </button>
+
+</div>
+
+
+    <!-- SECCIÓN 2: Playlist de Spotify -->
+    <div id="section2" class="card hidden">
+      <h2>Playlist de Cumple: Dale Play</h2>
+      <p>Un par de canciones para ponerle ritmo a tu día.</p>
+      <div class="playlist-content">
+        <!-- Reemplaza la URL del src por el iframe de tu playlist de Spotify -->
+        <iframe data-testid="embed-iframe" style="border-radius:12px" 
+        src="https://open.spotify.com/embed/playlist/6CUPrjYNBRNMialzF6e3eE?utm_source=generator&si=5f75babf4818472b" width="100%" height="352" frameBorder="0" allowfullscreen="" 
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <p class="playlist-text">
+          
+        </p>
+      </div>
+      <button class="btn btn-back" onclick="backToMenu()">⬅ Volver</button>
+    </div>
+
+    <!-- SECCIÓN 3: Galería de Fotos (Actualizada) -->
+  <div id="section3" class="card hidden">
+    <h2>SI TE RIES PIERDES</h2>
+    <p>Toca cada carta para ver la foto</p>
+
+    <div class="gallery-grid">
+
+      <!-- CARTA 1 -->
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <!-- Cara Frontal (La tapa del memorama) -->
+          <div class="flip-card-front">
+            <div class="cover-pattern">
+              <img src="img/cumple.jpg" alt="Portada de la carta" class="jungkook-cover">
+            </div> <!-- Puedes poner un emoji, logo o patrón -->
+          </div>
+          <!-- Cara Trasera (Tu foto - Polaroid) -->
+          <div class="flip-card-back">
+            <div class="polaroid">
+              <img src="img/cinepolito.jpg" alt="Foto 1" class="back-photo">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARTA 2 -->
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <img src="img/cumple.jpg" alt="Portada de la carta" class="jungkook-cover">
+          </div>
+          <div class="flip-card-back">
+            <div class="polaroid">
+              <img src="img/oxxo.jpg" alt="Foto 1" class="back-photo">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- CARTA 3 -->
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="img/cumple.jpg" alt="Portada de la carta" class="jungkook-cover">
+        </div>
+        <div class="flip-card-back">
+          <div class="polaroid">
+            <img src="img/bibliografia.jpg" alt="Foto 1" class="back-photo">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARTA 4 -->
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="img/cumple.jpg" alt="Portada de la carta" class="jungkook-cover">
+        </div>
+        <div class="flip-card-back">
+          <div class="polaroid">
+            <img src="img/flores.jpg" alt="Foto 1" class="back-photo">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- Cierre de gallery-grid -->
+
+  <button class="btn btn-back" onclick="backToMenu()">⬅ Volver</button>
+</div>
+
+    <!-- SECCIÓN 4: Cartas / Dedicatoria -->
+    <div id="section4" class="card hidden">
+      <h2>UN MENSAJE PARA TI 💜</h2>
+      <div class="letters-container">
+        <div class="letter-box">
+          <p style="font-family: 'Fredoka', cursive, sans-serif; font-size: 18px;">¡Feliz cumpleaños! Que este nuevo año de vida esté lleno de momentos mágicos, salud y mucha felicidad. 
+            Que nunca te falte la música que te hace sonreír y que sigas brillando con esa luz única.
+            ¡Por un año más de sueños cumplidos!</p>
+        </div>
+        <div class="sticker-container">
+          <img src="img/corazon.png" alt="Jungkook" class="sticker-img">
+        </div>
+      </div>
+      <button class="btn btn-back" onclick="backToMenu()">⬅ Volver</button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+(()=>{
+  const c = document.querySelector('#canvas-cumple'),
+        x = c.getContext('2d'),
+        img = document.querySelector('#img-regalo'),
+        card = document.querySelector('#section1');
+
+  let W, H, dpr, ps = [], run = false;
+  const R = (a, b) => a + Math.random() * (b - a);
+
+  function size() {
+    W = c.clientWidth || 320;
+    H = c.clientHeight || 350;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    
+    c.width = W * dpr;
+    c.height = H * dpr;
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    if (run) makeTarget();
+  }
+ function makeTarget() {
+    if (!img.complete || img.naturalWidth === 0) return;
+
+    // Calculamos el tamaño máximo disponible respetando ALTO y ANCHO
+    let maxW = W * 0.88,
+        maxH = H * 0.72,
+        s = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight, 1),
+        iw = Math.round(img.naturalWidth * s),
+        ih = Math.round(img.naturalHeight * s),
+        o = document.createElement('canvas'),
+        q = o.getContext('2d', {willReadFrequently: true});
+
+    o.width = iw; 
+    o.height = ih;
+    q.drawImage(img, 0, 0, iw, ih);
+
+    let d = q.getImageData(0, 0, iw, ih).data,
+        pts = [];
+
+    for (let y = 0; y < ih; y++) {
+      for (let xx = 0; xx < iw; xx++) {
+        let i = (y * iw + xx) * 4,
+            r = d[i], 
+            g = d[i+1], 
+            b = d[i+2], 
+            alpha = d[i+3];
+
+        let v = (r + g + b) / 3;
+
+        // Descartar fondo transparente o cuadrícula gris
+        let isGreyCheckboard = Math.abs(r - g) < 15 && Math.abs(g - b) < 15 && v > 140;
+        if (alpha < 100 || isGreyCheckboard) continue;
+
+        // Delineado oscuro
+        if (v < 85) {
+          pts.push({
+            x: xx, 
+            y: y, 
+            col: [214, 51, 132], 
+            r: R(0.9, 1.4)
+          });
+        } 
+        // Relleno de color
+        else if (Math.random() < 0.45) {
+          pts.push({
+            x: xx, 
+            y: y, 
+            col: [r, g, b], 
+            r: R(0.7, 1.2)
+          });
+        }
+      }
+    }
+
+    // Centrado exacto alineado vertical y horizontalmente
+    let ox = (W - iw) / 2,
+        oy = (H - ih) / 2 - 5;
+
+    ps = [];
+    let maxParticles = Math.min(pts.length, 4500);
+    let step = Math.max(1, Math.floor(pts.length / maxParticles));
+
+    for (let i = 0; i < pts.length && ps.length < maxParticles; i += step) {
+      let p = pts[i],
+          a = Math.random() * Math.PI * 2,
+          rad = Math.max(W, H) * R(0.3, 0.7);
+
+      ps.push({
+        x: p.x + ox + Math.cos(a) * rad,
+        y: p.y + oy + Math.sin(a) * rad,
+        tx: p.x + ox,
+        ty: p.y + oy,
+        r: p.r,
+        tw: Math.random() * 7,
+        a: R(0.8, 1),
+        col: p.col
+      });
+    }
+  }
+  function frame(t) {
+    x.clearRect(0, 0, W, H);
+
+    if (run) {
+      for (let p of ps) {
+        p.x += (p.tx - p.x) * 0.075;
+        p.y += (p.ty - p.y) * 0.075;
+        let pulse = 0.75 + 0.25 * Math.sin(t * 0.006 + p.tw);
+
+        x.globalAlpha = p.a * pulse;
+        x.fillStyle = `rgb(${p.col[0]},${p.col[1]},${p.col[2]})`;
+        x.beginPath();
+        x.arc(p.x, p.y, p.r, 0, 7);
+        x.fill();
+      }
+    }
+    x.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+
+  const observer = new MutationObserver(() => {
+    if (!card.classList.contains('hidden')) {
+      run = true;
+      size();
+      makeTarget();
+    }
+  });
+
+  observer.observe(card, { attributes: true, attributeFilter: ['class'] });
+
+  img.onload = size;
+  window.addEventListener('resize', size);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
